@@ -21,7 +21,7 @@
     index = @state.records.indexOf record
     records = @state.records.slice()
     records.splice index, 1, data
-    @replaceState records: records
+    @setState records: records
 
   credits: ->
     credits = @state.records.filter (val) -> val.amount >= 0
