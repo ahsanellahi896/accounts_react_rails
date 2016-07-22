@@ -1,6 +1,7 @@
 @Records = React.createClass
   getInitialState: ->
     records: @props.data
+    search: ''
 
   getDefaultProps: ->
     records: []
@@ -37,6 +38,14 @@
   balance: ->
     @debits() + @credits()
 
+  setSearch: (event) ->
+    @setState search: event.target.value
+
+  records: ->
+    @state.records.filter(
+      (record) => record.title.indexOf(@state.search) > -1
+    )
+
   render: ->
     React.DOM.div
       className: 'records'
@@ -50,6 +59,11 @@
         React.createElement AmountBox, type: 'info', amount: @balance(), text: 'Balance'
       React.createElement RecordForm, handleNewRecord: @addRecord
       React.DOM.hr null
+      React.DOM.input
+        name: 'search'
+        onChange: @setSearch
+        placeholder: 'Search...'
+      React.DOM.hr null
       React.DOM.table
         className: 'table table-bordered'
         React.DOM.thead null,
@@ -59,5 +73,5 @@
             React.DOM.th null, 'Amount'
             React.DOM.th null, 'Actions'
         React.DOM.tbody null,
-          for record in @state.records
+          for record in @records()
             React.createElement Record, key: record.id , record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord
